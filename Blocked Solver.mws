@@ -1,0 +1,740 @@
+{VERSION 6 0 "IBM INTEL NT" "6.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "Times" 1 12 0 
+0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }}
+{SECT 0 {EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 132 "###################
+#############\n# Mystic creation - April 2010 #\n#      'Blocked' Solv
+er        #\n################################\n" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 21 "with(LinearAlgebra):\n" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 415 "InitBoard:=proc(BlockList)\nlocal Board, Bloc
+k, IDBlock, i; \nBoard := Matrix(6);\nIDBlock := 1;\nfor Block in Bloc
+kList do\n  if Block[3] = 'V' then\n    for i from Block[1] to Block[1
+]+Block[4]-1 do\n      Board[i, Block[2]] := IDBlock\n    od;\n  elif \+
+Block[3] = 'H' then\n    for i from Block[2] to Block[2]+Block[4]-1 do
+\n      Board[Block[1], i] := IDBlock\n    od;\n  fi;\n  IDBlock := ID
+Block + 1;\nod;\nreturn Board;\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 415 "GetMoveToTheLeft:=proc(BlockList, IDBlock, Board, Al
+lowToDragMoreThanOnce)\nlocal newMove, FinalMoveList;\nFinalMoveList :
+= NULL;\nnewMove := MakeMoveToTheLeft(BlockList, IDBlock, Board);\nwhi
+le newMove[1] do\n  FinalMoveList := FinalMoveList, newMove[2];\n  if \+
+not AllowToDragMoreThanOnce then\n    break\n  fi;\n  newMove := MakeM
+oveToTheLeft(newMove[2][1], IDBlock, Copy(newMove[2][2]));\nod;\nretur
+n [FinalMoveList];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+436 "MakeMoveToTheLeft:=proc(BlockList, IDBlock, Board)\nlocal newBloc
+kList, newBoard, Block;\nBlock := BlockList[IDBlock];\nif Block[2] > 1
+ then if Board[Block[1],Block[2]-1]=0 then\n  newBlockList := BlockLis
+t;\n  newBlockList[IDBlock][2] := Block[2]-1;\n  newBoard := Copy(Boar
+d);\n  newBoard[Block[1],Block[2]-1] := IDBlock;\n  newBoard[Block[1],
+Block[2]+Block[4]-1] := 0;\n  return([true, [newBlockList, newBoard]])
+;\nfi fi;\nreturn [false];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 418 "GetMoveToTheRight:=proc(BlockList, IDBlock, Board, A
+llowToDragMoreThanOnce)\nlocal newMove, FinalMoveList;\nFinalMoveList \+
+:= NULL;\nnewMove := MakeMoveToTheRight(BlockList, IDBlock, Board);\nw
+hile newMove[1] do\n  FinalMoveList := FinalMoveList, newMove[2];\n  i
+f not AllowToDragMoreThanOnce then\n    break\n  fi;\n  newMove := Mak
+eMoveToTheRight(newMove[2][1], IDBlock, Copy(newMove[2][2]));\nod;\nre
+turn [FinalMoveList];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 456 "MakeMoveToTheRight:=proc(BlockList, IDBlock, Board)\nlocal newB
+lockList, newBoard, Block;\nBlock := BlockList[IDBlock];\nif Block[2]+
+Block[4] <= 6 then if Board[Block[1],Block[2]+Block[4]]=0 then\n  newB
+lockList := BlockList;\n  newBlockList[IDBlock][2] := Block[2]+1;\n  n
+ewBoard := Copy(Board);\n  newBoard[Block[1],Block[2]] := 0;\n  newBoa
+rd[Block[1],Block[2]+Block[4]] := IDBlock;\n  return([true, [newBlockL
+ist, newBoard]]);      \nfi fi;\nreturn [false];\nend:\n" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 394 "GetMoveUp:=proc(BlockList, IDBlock
+, Board, AllowToDragMoreThanOnce)\nlocal newMove, FinalMoveList;\nFina
+lMoveList := NULL;\nnewMove := MakeMoveUp(BlockList, IDBlock, Board);
+\nwhile newMove[1] do\n  FinalMoveList := FinalMoveList, newMove[2];\n
+  if not AllowToDragMoreThanOnce then\n    break\n  fi;\n  newMove := \+
+MakeMoveUp(newMove[2][1], IDBlock, Copy(newMove[2][2]));\nod;\nreturn \+
+[FinalMoveList];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+435 "MakeMoveUp:=proc(BlockList, IDBlock, Board)\nlocal newBlockList, \+
+newBoard, Block;\nBlock := BlockList[IDBlock];\nif Block[1] > 1 then i
+f Board[Block[1]-1,Block[2]]=0 then\n  newBlockList := BlockList;\n  n
+ewBlockList[IDBlock][1] := Block[1]-1;\n  newBoard := Copy(Board);\n  \+
+newBoard[Block[1]-1,Block[2]] := IDBlock;\n  newBoard[Block[1]+Block[4
+]-1,Block[2]] := 0;\n  return([true, [newBlockList, newBoard]]);      \+
+\nfi fi;\nreturn [false];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 400 "GetMoveDown:=proc(BlockList, IDBlock, Board, AllowTo
+DragMoreThanOnce)\nlocal newMove, FinalMoveList;\nFinalMoveList := NUL
+L;\nnewMove := MakeMoveDown(BlockList, IDBlock, Board);\nwhile newMove
+[1] do\n  FinalMoveList := FinalMoveList, newMove[2];\n  if not AllowT
+oDragMoreThanOnce then\n    break\n  fi;\n  newMove := MakeMoveDown(ne
+wMove[2][1], IDBlock, Copy(newMove[2][2]));\nod;\nreturn [FinalMoveLis
+t];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 450 "MakeMoveDow
+n:=proc(BlockList, IDBlock, Board)\nlocal newBlockList, newBoard, Bloc
+k;\nBlock := BlockList[IDBlock];\nif Block[1]+Block[4] <= 6 then if Bo
+ard[Block[1]+Block[4],Block[2]]=0 then\n  newBlockList := BlockList;\n
+  newBlockList[IDBlock][1] := Block[1]+1;\n  newBoard := Copy(Board);
+\n  newBoard[Block[1],Block[2]] := 0;\n  newBoard[Block[1]+Block[4],Bl
+ock[2]] := IDBlock;\n  return([true, [newBlockList, newBoard]]);      \+
+\nfi fi;\nreturn [false];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 812 "NextMoveDragAllowed:=proc(CurrentGame, AllowToDragMo
+reThanOnce)     # BlockList + Board\nlocal Block, BlockList, Board, Ne
+xtGameList, newBlockList, newBoard, IDBlock;\nBlockList := CurrentGame
+[1];\nBoard := CurrentGame[2];\nNextGameList := NULL;\nIDBlock := 1;\n
+for Block in BlockList do\n  if Block[3] = 'H' then\n    NextGameList \+
+:= NextGameList, GetMoveToTheLeft(BlockList, IDBlock, Board, AllowToDr
+agMoreThanOnce)[];\n    NextGameList := NextGameList, GetMoveToTheRigh
+t(BlockList, IDBlock, Board, AllowToDragMoreThanOnce)[];\n  elif Block
+[3] = 'V' then\n    NextGameList := NextGameList, GetMoveUp(BlockList,
+ IDBlock, Board, AllowToDragMoreThanOnce)[];\n    NextGameList := Next
+GameList, GetMoveDown(BlockList, IDBlock, Board, AllowToDragMoreThanOn
+ce)[];\n  fi;\n  IDBlock := IDBlock + 1;\nod;\nreturn [NextGameList];
+\nend:\n " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 906 "GoForPlayUnRe
+c:=proc(BlockList, AllowToDragMoreThanOnce)\n        #2nd option is to
+ make the drag of one block to more than one case equal to one move.\n
+local Board, GameList, FirstGameToDo, LastGameToDo, NumberOfMove, Game
+, iGame, NextGame, GameToVerif;\nBoard := InitBoard(BlockList);\nGameL
+ist := [[BlockList, Board]];\nFirstGameToDo := 1;\nLastGameToDo := 1;
+\nfor NumberOfMove from 0 to infinity do\n  for iGame from FirstGameTo
+Do to LastGameToDo do\n    Game := GameList[iGame];\n    if Game[1][1]
+[2] = 5 then     #Blue Block is on the top right position, so you won.
+\n      return NumberOfMove\n    fi;\n    NextGame := NextMoveDragAllo
+wed(Game, AllowToDragMoreThanOnce);\n    for GameToVerif in NextGame d
+o\n      if not IsAlreadyIn(GameToVerif, GameList) then\n        GameL
+ist := [GameList[], GameToVerif]  \n      fi;\n    od; \n  od;\n  Firs
+tGameToDo := LastGameToDo + 1;\n  LastGameToDo := nops(GameList);\nod;
+\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 187 "IsAlreadyIn:=p
+roc(GameToSearch, GameList)\nlocal GameToCompare;\nfor GameToCompare i
+n GameList do\n  if GameToCompare[1] = GameToSearch[1] then\n    retur
+n true;\n  fi;\nod;\nreturn false;\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 1028 "GoForPlayAndShowMoves:=proc(BlockList, AllowToDra
+gMoreThanOnce)\n        #2nd option is to make the drag of one block t
+o more than one case equal to one move.\nlocal Board, GameList, FirstG
+ameToDo, LastGameToDo, NumberOfMove, Game, iGame, NextGame, GameToVeri
+f, RefList;\nBoard := InitBoard(BlockList);\nGameList := [[BlockList, \+
+Board]];\nRefList := [-1];\nFirstGameToDo := 1;\nLastGameToDo := 1;\nf
+or NumberOfMove from 0 to infinity do\n  for iGame from FirstGameToDo \+
+to LastGameToDo do\n    Game := GameList[iGame];\n    if Game[1][1][2]
+ = 5 then     #Blue Block is on the top right position, so you won.\n \+
+     ShowDetailedMoves(iGame, GameList, RefList);\n      return Number
+OfMove\n    fi;\n    NextGame := NextMoveDragAllowed(Game, AllowToDrag
+MoreThanOnce);\n    for GameToVerif in NextGame do\n      if not IsAlr
+eadyIn(GameToVerif, GameList) then\n        GameList := [GameList[], G
+ameToVerif];\n        RefList := [RefList[], iGame];\n      fi;\n    o
+d; \n  od;\n  FirstGameToDo := LastGameToDo + 1;\n  LastGameToDo := no
+ps(GameList);\nod;\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+446 "ShowDetailedMoves:=proc(iGame, GameList, RefList)\nlocal LinkedRe
+fList, iGameToShow, RefToAdd;\nLinkedRefList := NULL;\nRefToAdd := iGa
+me;\nwhile RefToAdd <> -1 do\n  LinkedRefList := LinkedRefList, RefToA
+dd;\n  RefToAdd := RefList[RefToAdd];\nod;\nLinkedRefList := [LinkedRe
+fList];\nfor iGameToShow from nops(LinkedRefList) to 1 by -1 do\n  pri
+nt(DrawBoard(GameList[LinkedRefList[iGameToShow]][1], nops(LinkedRefLi
+st) - iGameToShow, MovedBlock))\nod;\nend:\n" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 1024 "GoForPlayAndAnimation:=proc(BlockList, AllowTo
+DragMoreThanOnce)\n        #2nd option is to make the drag of one bloc
+k to more than one case equal to one move.\nlocal Board, GameList, Fir
+stGameToDo, LastGameToDo, NumberOfMove, Game, iGame, NextGame, GameToV
+erif, RefList;\nBoard := InitBoard(BlockList);\nGameList := [[BlockLis
+t, Board]];\nRefList := [-1];\nFirstGameToDo := 1;\nLastGameToDo := 1;
+\nfor NumberOfMove from 0 to infinity do\n  for iGame from FirstGameTo
+Do to LastGameToDo do\n    Game := GameList[iGame];\n    if Game[1][1]
+[2] = 5 then     #Blue Block is on the top right position, so you won.
+\n      ShowAnimation(iGame, GameList, RefList);\n      return NumberO
+fMove\n    fi;\n    NextGame := NextMoveDragAllowed(Game, AllowToDragM
+oreThanOnce);\n    for GameToVerif in NextGame do\n      if not IsAlre
+adyIn(GameToVerif, GameList) then\n        GameList := [GameList[], Ga
+meToVerif];\n        RefList := [RefList[], iGame];\n      fi;\n    od
+; \n  od;\n  FirstGameToDo := LastGameToDo + 1;\n  LastGameToDo := nop
+s(GameList);\nod;\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+388 "ShowAnimation:=proc(iGame, GameList, RefList)\nlocal LinkedRefLis
+t, iGameToShow, RefToAdd;\nLinkedRefList := NULL;\nRefToAdd := iGame;
+\nwhile RefToAdd <> -1 do\n  LinkedRefList := LinkedRefList, RefToAdd;
+\n  RefToAdd := RefList[RefToAdd];\nod;\nLinkedRefList := [LinkedRefLi
+st];\nprint(CreateAnimation([seq(GameList[LinkedRefList[iGameToShow]][
+1],iGameToShow = nops(LinkedRefList)..1,-1)]));\nend:\n" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 1036 "GoForPlayAndSlidedAnimation:=proc
+(BlockList, AllowToDragMoreThanOnce)\n        #2nd option is to make t
+he drag of one block to more than one case equal to one move.\nlocal B
+oard, GameList, FirstGameToDo, LastGameToDo, NumberOfMove, Game, iGame
+, NextGame, GameToVerif, RefList;\nBoard := InitBoard(BlockList);\nGam
+eList := [[BlockList, Board]];\nRefList := [-1];\nFirstGameToDo := 1;
+\nLastGameToDo := 1;\nfor NumberOfMove from 0 to infinity do\n  for iG
+ame from FirstGameToDo to LastGameToDo do\n    Game := GameList[iGame]
+;\n    if Game[1][1][2] = 5 then     #Blue Block is on the top right p
+osition, so you won.\n      ShowSlidedAnimation(iGame, GameList, RefLi
+st);\n      return NumberOfMove\n    fi;\n    NextGame := NextMoveDrag
+Allowed(Game, AllowToDragMoreThanOnce);\n    for GameToVerif in NextGa
+me do\n      if not IsAlreadyIn(GameToVerif, GameList) then\n        G
+ameList := [GameList[], GameToVerif];\n        RefList := [RefList[], \+
+iGame];\n      fi;\n    od; \n  od;\n  FirstGameToDo := LastGameToDo +
+ 1;\n  LastGameToDo := nops(GameList);\nod;\nend:\n" }}}{EXCHG {PARA 
+0 "> " 0 "" {MPLTEXT 1 0 400 "ShowSlidedAnimation:=proc(iGame, GameLis
+t, RefList)\nlocal LinkedRefList, iGameToShow, RefToAdd;\nLinkedRefLis
+t := NULL;\nRefToAdd := iGame;\nwhile RefToAdd <> -1 do\n  LinkedRefLi
+st := LinkedRefList, RefToAdd;\n  RefToAdd := RefList[RefToAdd];\nod;
+\nLinkedRefList := [LinkedRefList];\nprint(CreateSlidedAnimation([seq(
+GameList[LinkedRefList[iGameToShow]][1],iGameToShow = nops(LinkedRefLi
+st)..1,-1)]));\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 971 "
+with(plots):\nwith(plottools):\nplotsetup(default, plotoptions=`width=
+6in,height=18in`);\n\nDrawBoard:=proc(BlockList, nMove)\nlocal DrawBlo
+ckList, Block, x, y, l, d;\nd := 0.04;\nDrawBlockList := NULL;\nBlock \+
+:= BlockList[1];\nx:=Block[1]; y:=Block[2]; l:=Block[4];\nDrawBlockLis
+t := DrawBlockList, polygon([[y-1+d,1-x-d],[y+l-1-d,1-x-d],[y+l-1-d,-x
++d],[y-1+d,-x+d]], color = blue);\nfor Block in BlockList[2..-1] do\n \+
+ x:=Block[1]; y:=Block[2]; l:=Block[4];\n  if Block[3] = 'H' then\n   \+
+ DrawBlockList := DrawBlockList, polygon([[y-1+d,1-x-d],[y+l-1-d,1-x-d
+],[y+l-1-d,-x+d],[y-1+d,-x+d]], color = grey);\n  elif Block[3] = 'V' \+
+then\n    DrawBlockList := DrawBlockList, polygon([[y-1+d,1-x-d],[y-d,
+1-x-d],[y-d,1-x-l+d],[y-1+d,1-x-l+d]], color = grey);\n  fi;\nod;\nDra
+wBlockList := DrawBlockList, polygon([[0-d,0+d],[6+d,0+d],[6+d,-6-d],[
+0-d,-6-d]]);\ndisplay([DrawBlockList], insequence=false, scaling = con
+strained, axes = none, thickness = 3, title = cat(\"Move n\260\", nMov
+e, \" :\"));\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 1109 "C
+reateAnimation:=proc(ListOfBlockList)\nlocal DrawBlockList, ListOfDraw
+BlockList, Block, BlockList, x, y, l, d;\nd := 0.04;\nListOfDrawBlockL
+ist := NULL;\n\nfor BlockList in ListOfBlockList do\n  DrawBlockList :
+= NULL;\n  Block := BlockList[1];\n  x:=Block[1]; y:=Block[2]; l:=Bloc
+k[4];\n  DrawBlockList := DrawBlockList, polygon([[y-1+d,1-x-d],[y+l-1
+-d,1-x-d],[y+l-1-d,-x+d],[y-1+d,-x+d]], color = blue);\n  for Block in
+ BlockList[2..-1] do\n    x:=Block[1]; y:=Block[2]; l:=Block[4];\n    \+
+if Block[3] = 'H' then\n      DrawBlockList := DrawBlockList, polygon(
+[[y-1+d,1-x-d],[y+l-1-d,1-x-d],[y+l-1-d,-x+d],[y-1+d,-x+d]], color = g
+rey);\n    elif Block[3] = 'V' then\n      DrawBlockList := DrawBlockL
+ist, polygon([[y-1+d,1-x-d],[y-d,1-x-d],[y-d,1-x-l+d],[y-1+d,1-x-l+d]]
+, color = grey);\n    fi;\n  od;\n  DrawBlockList := DrawBlockList, po
+lygon([[0-d,0+d],[6+d,0+d],[6+d,-6-d],[0-d,-6-d]]);\n  ListOfDrawBlock
+List := ListOfDrawBlockList, [DrawBlockList];\nod;\n\nanimate( Move ->
+ display([ListOfDrawBlockList][Move], scaling = constrained, axes = no
+ne, thickness = 3), [Move+1], Move = [$0..nops([ListOfDrawBlockList])-
+1]);\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 2506 "CreateSli
+dedAnimation:=proc(ListOfBlockList)\nlocal DrawBlockList, ListOfDrawBl
+ockList, DrawBorder, Block, BlockList, x, y, l, d, iBlockList, Previou
+sBlockList, MovedBlockID, MoveParameters, newBlock, oldBlock, DrawBloc
+kListWithoutTheMovedBlock, MovePlotOfTheBlock, DrawOfTheBlock, DrawLis
+tOfTheBlock;\nd := 0.04;\nListOfDrawBlockList := NULL;\n\nfor iBlockLi
+st from 1 to nops(ListOfBlockList) do\n  BlockList := ListOfBlockList[
+iBlockList];\n\n  if iBlockList<>1 then\n    PreviousBlockList := List
+OfBlockList[iBlockList-1];\n    MovedBlockID := GetTheBlockMoved(Block
+List, PreviousBlockList);\n  fi;\n\n  DrawBlockListWithoutTheMovedBloc
+k := NULL;\n  Block := BlockList[1];\n  x:=Block[1]; y:=Block[2]; l:=B
+lock[4];\n  if i=1 or Block <> BlockList[ MovedBlockID ] then\n    Dra
+wBlockListWithoutTheMovedBlock := DrawBlockListWithoutTheMovedBlock, p
+olygon([[y-1+d,1-x-d],[y+l-1-d,1-x-d],[y+l-1-d,-x+d],[y-1+d,-x+d]], co
+lor = blue);\n  fi;\n  for Block in BlockList[2..-1] do\n    if i=1 or
+ Block <> BlockList[ MovedBlockID ] then \n      x:=Block[1]; y:=Block
+[2]; l:=Block[4];\n      if Block[3] = 'H' then\n        DrawBlockList
+WithoutTheMovedBlock := DrawBlockListWithoutTheMovedBlock, polygon([[y
+-1+d,1-x-d],[y+l-1-d,1-x-d],[y+l-1-d,-x+d],[y-1+d,-x+d]], color = grey
+);\n      elif Block[3] = 'V' then\n        DrawBlockListWithoutTheMov
+edBlock := DrawBlockListWithoutTheMovedBlock, polygon([[y-1+d,1-x-d],[
+y-d,1-x-d],[y-d,1-x-l+d],[y-1+d,1-x-l+d]], color = grey);\n      fi;\n
+    fi;\n  od;\n  DrawBorder := polygon([[0-d,0+d],[6+d,0+d],[6+d,-6-d
+],[0-d,-6-d]]);\n\n  if iBlockList<>1 then\n    oldBlock := PreviousBl
+ockList[MovedBlockID];\n    newBlock := BlockList[MovedBlockID];\n    \+
+if newBlock[3]='H' then\n      MoveParameters := ['H', newBlock[2] - o
+ldBlock[2] ];\n    elif newBlock[3]='V' then\n      MoveParameters := \+
+['V', newBlock[1] - oldBlock[1] ];\n    fi;\n    DrawListOfTheBlock :=
+ MakeTheMoveOfTheBlock(oldBlock, MoveParameters, d, MovedBlockID);\n  \+
+  for DrawOfTheBlock in DrawListOfTheBlock do\n      ListOfDrawBlockLi
+st := ListOfDrawBlockList, [[DrawBlockListWithoutTheMovedBlock, DrawOf
+TheBlock, DrawBorder], iBlockList];   \n    od;\n\n  else\n    ListOfD
+rawBlockList := ListOfDrawBlockList, [[DrawBlockListWithoutTheMovedBlo
+ck, DrawBorder], iBlockList];\n  fi;\n\nod;\nanimate( Image -> display
+([ListOfDrawBlockList][Image][1], scaling = constrained, axes = none, \+
+thickness = 3, title = cat(\"Move n\260\", [ListOfDrawBlockList][Image
+][2]-1, \" :\")), [Image+1], Image = [$0..nops([ListOfDrawBlockList])-
+1], scaling = constrained);\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 200 "GetTheBlockMoved:=proc( BlockList, PreviousBlockList
+ )\nlocal iBlock;\nfor iBlock from 1 to nops(BlockList) do\n  if Block
+List[iBlock] <> PreviousBlockList[iBlock] then\n    return iBlock;\n  \+
+fi;\nod;\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 1869 "MakeT
+heMoveOfTheBlock:=proc( Block, Parameters, d, ID )\nlocal nPlotPerSqua
+re, x, y, l, xFP, yFP, mLenghtOnSquare, mDirection, numberOfPlot, Firs
+tPointPlotList, distanceBetweenPlots, nPlotOfFirstPoint, DrawBlockMove
+dList, FirstPoint;\nnPlotPerSquare := 5; \nx:=Block[1]; y:=Block[2]; l
+:=Block[4];\nmLenghtOnSquare:=Parameters[2]; mDirection := Parameters[
+1];\nnumberOfPlot := 1 + abs(mLenghtOnSquare) * nPlotPerSquare;\ndista
+nceBetweenPlots := 1 / nPlotPerSquare * signum(mLenghtOnSquare);\nFirs
+tPointPlotList := NULL;\nif mDirection = 'V' then\n  for nPlotOfFirstP
+oint from 0 to numberOfPlot -1  do\n    FirstPointPlotList := FirstPoi
+ntPlotList, [y-1+d, 1-x-d - nPlotOfFirstPoint * distanceBetweenPlots];
+\n  od;\nelif mDirection = 'H' then\n  for nPlotOfFirstPoint from 0 to
+ numberOfPlot -1  do\n    FirstPointPlotList := FirstPointPlotList, [ \+
+y-1+d + nPlotOfFirstPoint * distanceBetweenPlots, 1-x-d];\n  od;\nfi;
+\nFirstPointPlotList := [FirstPointPlotList];\n\nDrawBlockMovedList :=
+ NULL;\nif mDirection = 'H' then\n  for FirstPoint in FirstPointPlotLi
+st do\n    xFP:=FirstPoint[1]; yFP:=FirstPoint[2];\n    if ID = 1 then
+\n      DrawBlockMovedList := DrawBlockMovedList, polygon([[xFP,yFP],[
+xFP-2*d+l,yFP],[xFP-2*d+l,yFP+2*d-1],[xFP,yFP+2*d-1]], color = blue);
+\n    else\n      DrawBlockMovedList := DrawBlockMovedList, polygon([[
+xFP,yFP],[xFP-2*d+l,yFP],[xFP-2*d+l,yFP+2*d-1],[xFP,yFP+2*d-1]], color
+ = grey);\n    fi\n  od;\nelif mDirection = 'V' then\n  for FirstPoint
+ in FirstPointPlotList do\n    xFP:=FirstPoint[1]; yFP:=FirstPoint[2];
+\n    if ID = 1 then\n      DrawBlockMovedList := DrawBlockMovedList, \+
+polygon([[xFP,yFP],[xFP-2*d+1,yFP],[xFP-2*d+1,yFP+2*d-l],[xFP,yFP+2*d-
+l]], color = blue);\n    else\n      DrawBlockMovedList := DrawBlockMo
+vedList, polygon([[xFP,yFP],[xFP-2*d+1,yFP],[xFP-2*d+1,yFP+2*d-l],[xFP
+,yFP+2*d-l]], color = grey);\n    fi;\n  od;\nfi;\nreturn [DrawBlockMo
+vedList];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 239 "NumTo
+Array:=proc( Number )\nlocal PartNumber, FinalArray;\nPartNumber := Nu
+mber;\nFinalArray := NULL;\nwhile PartNumber <> 0 do\n  FinalArray := \+
+PartNumber mod 10, FinalArray;\n  PartNumber := iquo( PartNumber, 10)
+\nod;\nreturn [FinalArray];\nend:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 2260 "Verif := proc( SimpleInput )     # Simple input (ju
+st a list of integer, 4 by blocks, the 3rd is 1 for 'H', 2 for 'V', sl
+ide animation is done, and the 2nd parameter of the main procedure wil
+l be true)\nglobal GameToPlay;\nlocal CorrectInput, OneBlock, iBlock, \+
+iRelativeInput, ArrayInput, Digit, Direction, BlockLenght, PartialBloc
+k, typeOfInput;\nif whattype( SimpleInput ) = list then\n  if whattype
+( SimpleInput[1] ) = list then\n    typeOfInput := \"complex\"\n  else
+\n    typeOfInput := \"simple\"\n  fi;\nelse\n  typeOfInput := \"parsi
+ng\"\nfi;\nif typeOfInput = \"complex\" then\n  GameToPlay := SimpleIn
+put;\n  return DrawBoard(SimpleInput, 0);\nelif typeOfInput = \"simple
+\" then\n  CorrectInput := NULL;\n  for iBlock from 1 to nops(SimpleIn
+put)/4 do\n    OneBlock := NULL;\n    for iRelativeInput from 1 to 4 d
+o\n      if iRelativeInput = 3 then\n        if SimpleInput[ iRelative
+Input + (iBlock-1)*4 ] = 1 then\n           OneBlock := OneBlock, 'H';
+\n        else\n           OneBlock := OneBlock, 'V';\n        fi\n   \+
+   else\n        OneBlock := OneBlock, SimpleInput[ iRelativeInput + (
+iBlock-1)*4 ];\n      fi;\n    od;\n    CorrectInput := CorrectInput, \+
+[OneBlock];\n  od;\n  GameToPlay := [CorrectInput];\n  return DrawBoar
+d([CorrectInput], 0);\nelif typeOfInput = \"parsing\" then\n  ArrayInp
+ut := NumToArray( SimpleInput );\n  CorrectInput := NULL;\n  CorrectIn
+put := CorrectInput, [3,ArrayInput[1],'H',2];\n  PartialBlock := NULL;
+\n  Direction := 'H';\n  BlockLenght := 2;\n  for Digit in ArrayInput[
+2..-1] do\n    if Digit = 0 then\n      if Direction = 'H' then\n     \+
+   if BlockLenght = 2 then\n          BlockLenght := 3\n        elif B
+lockLenght = 3 then\n          Direction := 'V';\n          BlockLengh
+t := 2;\n        fi;\n      elif Direction = 'V' then\n        BlockLe
+nght := 3    #Then only 0 keeping is the last, to past from H2 to H3.
+\n      fi;\n    elif nops([PartialBlock]) = 0 then\n      PartialBloc
+k := PartialBlock, Digit\n    elif nops([PartialBlock]) = 1 then\n    \+
+  PartialBlock := PartialBlock, Digit;\n      CorrectInput := CorrectI
+nput, [PartialBlock, Direction, BlockLenght];\n      PartialBlock := N
+ULL;\n    fi;\n  od;\n  GameToPlay := [CorrectInput];\n  return DrawBo
+ard([CorrectInput], 0);  \nelse\n  return \"Wrong type of input, pleas
+e choose between simple and complex\";\nfi;\nend:\n" }}}{EXCHG {PARA 
+0 "> " 0 "" {MPLTEXT 1 0 499 "Play := proc( DisplayType )\nglobal Game
+ToPlay;\nif DisplayType = \"none\" then\n  return GoForPlayUnRec(GameT
+oPlay, true) \nelif DisplayType = \"detailed\" then\n  return GoForPla
+yAndShowMoves(GameToPlay, true)\nelif DisplayType = \"simple_animation
+\" then\n  return GoForPlayAndAnimation(GameToPlay, true)\nelif Displa
+yType = \"animation\" then\n  return GoForPlayAndSlidedAnimation(GameT
+oPlay, true)\nelse\n  return \"Wrong display type, please choose betwe
+en : none, detailed, simple_animation, animation\"\nfi;\nend:\n" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 40 "############# End of code ##
+###########\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 592 "   # Exam
+ples : (L21 & L100 from Blocked, L1b & L600e from Unblock Me - both on
+ iPhone)\n\nL21:=[[3,1,'H',2],[1,3,'V',3],[1,4,'V',3],[1,6,'V',3],[5,1
+,'V',2],[1,1,'H',2],[4,1,'H',2],[6,3,'H',2]]:\nL100:=[[3,4,'H',2],[1,1
+,'H',3],[2,1,'V',2],[4,1,'H',2],[5,2,'V',2],[3,3,'V',2],[5,3,'V',2],[4
+,4,'V',2],[1,6,'V',3],[5,5,'H',2],[6,4,'H',3]]:\nL600e:=[[3,1,'H',2],[
+1,1,'V',2],[2,2,'H',3],[1,5,'V',2],[1,6,'V',3],[4,1,'H',2],[3,3,'V',2]
+,[3,4,'V',2],[3,5,'V',2],[5,4,'V',2],[5,5,'H',2],[6,5,'H',2]]:\nL1b:=[
+[3,1,'H',2],[1,1,'H',3],[1,6,'V',3],[2,3,'V',3],[4,1,'V',2],[6,1,'H',3
+],[4,5,'H',2],[5,5,'V',2]]:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 766 "   # Level 6 expert from Unblock Me -> Input type examples :\n
+\n   # Complex type, full :\n\nL6e_complex := [[3,2,'H',2],[1,1,'H',3]
+,[1,4,'V',2],[1,5,'V',2],[2,1,'V',3],[2,2,'H',2],[3,4,'V',2],[4,3,'V',
+2],[4,5,'H',2],[6,1,'H',3],[5,4,'H',2],[5,6,'V',2]]:\n\n   # Simple ty
+pe, as the complex one, but 1 is H, 2 is V, and no array parsing\n\nL6
+e_simple := [3,2,1,2,1,1,1,3,1,4,2,2,1,5,2,2,2,1,2,3,2,2,1,2,3,4,2,2,4
+,3,2,2,4,5,1,2,6,1,1,3,5,4,1,2,5,6,2,2]:\n\n   # Parsing type, the 1st
+ digit is the line of the blue block, then every couple of numbers are
+ coordinates.\n   # The first part is for horizontal blocks with a len
+gth of 2, then a length of 3, then a vertical blocks of 2, and then of
+ 3.\n   # The part separations are the 0.\n\nL6e_parsing := 2224554011
+6101415344356021:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 518 "   \+
+# To get the solution :\n   # Verif( Input ) to verif the puzzle prope
+rties. You will get a draw of the hole board. The Input can be either \+
+of complex, of simple or of parsing type.\n   # When you done the veri
+fication, you can get the solution by\n   # Play ( AnswerType ). The A
+nswerType can be 'none' to only get the minimal number of moves, 'deta
+iled' to get every drawing of every steps,\n   #                      \+
+'simple_animation' to get these steps on an animation, and 'animation'
+ to get a slided animation.\n " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 139 "   # Full example : (Level 21 expert from Unblock Me)\n\n# Ve
+rif( 1121425420516201123244445036 ):\n# Play( \"animation\" ):        \+
+      \n      " }{GLPLOT2D 615 615 615 {PLOTDATA 2 "6$-%(ANIMATEG6gx73
+-%)POLYGONSG6%7&7$$\"\"%!\"#$!$/#F.7$$\"$'>F.F/7$F2$!$'HF.7$F,F5-%'COL
+OURG6&%$RGBG$\"\"!F=F<$\"*++++\"!\")-%*THICKNESSG6#\"\"$-F(6%7&7$$\"$/
+\"F.$!\"%F.7$$\"$'HF.FK7$FN$!#'*F.7$FIFQ-F96&F;$\")=THvF@FVFVFA-F(6%7&
+7$$\"$/$F.FK7$$\"$'\\F.FK7$FinFQ7$FfnFQFTFA-F(6%7&7$$\"$/%F.$!$/\"F.7$
+$\"$'fF.Fco7$Ffo$!$'>F.7$FaoFioFTFA-F(6%7&7$FI$!$/$F.7$FNF`p7$FN$!$'RF
+.7$FIFdpFTFA-F(6%7&7$F,$!$/%F.7$FNF[q7$FN$!$'\\F.7$F,F_qFTFA-F(6%7&7$F
+I$!$/&F.7$$\"$'RF.Ffq7$Fiq$!$'fF.7$FIF\\rFTFA-F(6%7&7$F,FK7$$\"#'*F.FK
+7$FdrFio7$F,FioFTFA-F(6%7&7$$\"$/#F.Fco7$FNFco7$FNF57$F\\sF5FTFA-F(6%7
+&7$FfnFco7$FiqFco7$FiqF57$FfnF5FTFA-F(6%7&7$FfnF`p7$FiqF`p7$FiqF_q7$Ff
+nF_qFTFA-F(6%7&7$FaoF`p7$FinF`p7$FinF_q7$FaoF_qFTFA-F(6%7&7$$\"$/&F.F/
+7$FfoF/7$FfoFdp7$FjtFdpFTFA-F(6$7&7$FKF,7$$\"$/'F.F,7$Fdu$!$/'F.7$FKFg
+uFA-%(SCALINGG6#%,CONSTRAINEDG-%*AXESSTYLEG6#%%NONEG-%&TITLEG6#Q5Move~
+n|[v0~:|+Image~=~06\"73F'FEF]oF\\pFgpFbqF_rFhrFasFhsF_tFftFXF_uFjuF^v-
+Fcv6#Q5Move~n|[v1~:|+Image~=~1Ffv73F'FEF]oF\\pFgpFbqF_rFhrFasFhsF_tFft
+-F(6%7&7$$\"++++SK!\"*FK7$$\"++++g^FbwFK7$FdwFQ7$F`wFQFTFAF_uFjuF^v-Fc
+v6#Q5Move~n|[v1~:|+Image~=~2Ffv73F'FEF]oF\\pFgpFbqF_rFhrFasFhsF_tFft-F
+(6%7&7$$\"++++SMFbwFK7$$\"++++g`FbwFK7$FcxFQ7$F`xFQFTFAF_uFjuF^v-Fcv6#
+Q5Move~n|[v1~:|+Image~=~3Ffv73F'FEF]oF\\pFgpFbqF_rFhrFasFhsF_tFft-F(6%
+7&7$$\"++++SOFbwFK7$$\"++++gbFbwFK7$FbyFQ7$F_yFQFTFAF_uFjuF^v-Fcv6#Q5M
+ove~n|[v1~:|+Image~=~4Ffv73F'FEF]oF\\pFgpFbqF_rFhrFasFhsF_tFft-F(6%7&7
+$$\"++++SQFbwFK7$$\"++++gdFbwFK7$FazFQ7$F^zFQFTFAF_uFjuF^v-Fcv6#Q5Move
+~n|[v1~:|+Image~=~5Ffv73F'FEF]oF\\pFgpFbqF_rFhrFasFhsF_tFft-F(6%7&7$Fa
+oFK7$FfoFK7$FfoFQ7$FaoFQFTFAF_uFjuF^v-Fcv6#Q5Move~n|[v1~:|+Image~=~6Ff
+v73F'FEFizF]oFgpFbqF_rFhrFasFhsF_tFftF\\pF_uFjuF^v-Fcv6#Q5Move~n|[v2~:
+|+Image~=~7Ffv73F'FEFizF]oFgpFbqF_rFhrFasFhsF_tFft-F(6%7&7$$\"+++++%)!
+#5F`p7$$\"++++gFFbwF`p7$F`\\lFdp7$F\\\\lFdpFTFAF_uFjuF^v-Fcv6#Q5Move~n
+|[v2~:|+Image~=~8Ffv73F'FEFizF]oFgpFbqF_rFhrFasFhsF_tFft-F(6%7&7$$\"++
++++kF^\\lF`p7$$\"++++gDFbwF`p7$F_]lFdp7$F\\]lFdpFTFAF_uFjuF^v-Fcv6#Q5M
+ove~n|[v2~:|+Image~=~9Ffv73F'FEFizF]oFgpFbqF_rFhrFasFhsF_tFft-F(6%7&7$
+$\"+++++WF^\\lF`p7$$\"++++gBFbwF`p7$F^^lFdp7$F[^lFdpFTFAF_uFjuF^v-Fcv6
+#Q6Move~n|[v2~:|+Image~=~10Ffv73F'FEFizF]oFgpFbqF_rFhrFasFhsF_tFft-F(6
+%7&7$$\"+++++CF^\\lF`p7$$\"++++g@FbwF`p7$F]_lFdp7$Fj^lFdpFTFAF_uFjuF^v
+-Fcv6#Q6Move~n|[v2~:|+Image~=~11Ffv73F'FEFizF]oFgpFbqF_rFhrFasFhsF_tFf
+t-F(6%7&7$F,F`p7$F2F`p7$F2Fdp7$F,FdpFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v2~:|
++Image~=~12Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFhsF_tFftFbqF_uFjuF^v-Fcv6#Q
+6Move~n|[v3~:|+Image~=~13Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFhsF_tFft-F(6%
+7&7$$\"++++S7FbwFfq7$$\"++++gTFbwFfq7$F[alF\\r7$Fh`lF\\rFTFAF_uFjuF^v-
+Fcv6#Q6Move~n|[v3~:|+Image~=~14Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFhsF_tFf
+t-F(6%7&7$$\"++++S9FbwFfq7$$\"++++gVFbwFfq7$FjalF\\r7$FgalF\\rFTFAF_uF
+juF^v-Fcv6#Q6Move~n|[v3~:|+Image~=~15Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFh
+sF_tFft-F(6%7&7$$\"++++S;FbwFfq7$$\"++++gXFbwFfq7$FiblF\\r7$FfblF\\rFT
+FAF_uFjuF^v-Fcv6#Q6Move~n|[v3~:|+Image~=~16Ffv73F'FEFizF]oFe_lFgpF_rFh
+rFasFhsF_tFft-F(6%7&7$$\"++++S=FbwFfq7$$\"++++gZFbwFfq7$FhclF\\r7$Fecl
+F\\rFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v3~:|+Image~=~17Ffv73F'FEFizF]oFe_lFg
+pF_rFhrFasFhsF_tFft-F(6%7&7$F\\sFfq7$FinFfq7$FinF\\r7$F\\sF\\rFTFAF_uF
+juF^v-Fcv6#Q6Move~n|[v3~:|+Image~=~18Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFh
+sF_tFft-F(6%7&7$$\"++++SAFbwFfq7$FdwFfq7$FdwF\\r7$F_elF\\rFTFAF_uFjuF^
+v-Fcv6#Q6Move~n|[v3~:|+Image~=~19Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFhsF_t
+Fft-F(6%7&7$$\"++++SCFbwFfq7$FcxFfq7$FcxF\\r7$F\\flF\\rFTFAF_uFjuF^v-F
+cv6#Q6Move~n|[v3~:|+Image~=~20Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFhsF_tFft
+-F(6%7&7$$\"++++SEFbwFfq7$FbyFfq7$FbyF\\r7$FiflF\\rFTFAF_uFjuF^v-Fcv6#
+Q6Move~n|[v3~:|+Image~=~21Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFhsF_tFft-F(6
+%7&7$$\"++++SGFbwFfq7$FazFfq7$FazF\\r7$FfglF\\rFTFAF_uFjuF^v-Fcv6#Q6Mo
+ve~n|[v3~:|+Image~=~22Ffv73F'FEFizF]oFe_lFgpF_rFhrFasFhsF_tFft-F(6%7&7
+$FfnFfq7$FfoFfq7$FfoF\\r7$FfnF\\rFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v3~:|+Im
+age~=~23Ffv73F'FEFizF]oFe_lFgpF_hlF_rFhrFhsF_tFftFasF_uFjuF^v-Fcv6#Q6M
+ove~n|[v4~:|+Image~=~24Ffv73F'FEFizF]oFe_lFgpF_hlF_rFhrFhsF_tFft-F(6%7
+&7$Ffn$!+++++%)F^\\l7$FiqFbil7$Fiq$!++++gFFbw7$FfnFfilFTFAF_uFjuF^v-Fc
+v6#Q6Move~n|[v4~:|+Image~=~25Ffv73F'FEFizF]oFe_lFgpF_hlF_rFhrFhsF_tFft
+-F(6%7&7$Ffn$!+++++kF^\\l7$FiqFajl7$Fiq$!++++gDFbw7$FfnFejlFTFAF_uFjuF
+^v-Fcv6#Q6Move~n|[v4~:|+Image~=~26Ffv73F'FEFizF]oFe_lFgpF_hlF_rFhrFhsF
+_tFft-F(6%7&7$Ffn$!+++++WF^\\l7$FiqF`[m7$Fiq$!++++gBFbw7$FfnFd[mFTFAF_
+uFjuF^v-Fcv6#Q6Move~n|[v4~:|+Image~=~27Ffv73F'FEFizF]oFe_lFgpF_hlF_rFh
+rFhsF_tFft-F(6%7&7$Ffn$!+++++CF^\\l7$FiqF_\\m7$Fiq$!++++g@Fbw7$FfnFc\\
+mFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v4~:|+Image~=~28Ffv73F'FEFizF]oFe_lFgpF_
+hlF_rFhrFhsF_tFft-F(6%7&Fen7$FiqFK7$FiqFio7$FfnFioFTFAF_uFjuF^v-Fcv6#Q
+6Move~n|[v4~:|+Image~=~29Ffv73F'FEFizF]oFe_lFgpF_hlF_rFhrFj\\mF_tFftFh
+sF_uFjuF^v-Fcv6#Q6Move~n|[v5~:|+Image~=~30Ffv73F'FEFizF]oFe_lFgpF_hlF_
+rFhrFj\\mF_tFft-F(6%7&7$Ffn$!++++SGFbw7$FiqF\\^m7$Fiq$!++++gZFbw7$FfnF
+`^mFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v5~:|+Image~=~31Ffv73F'FEFizF]oFe_lFgp
+F_hlF_rFhrFj\\mF_tFft-F(6%7&7$Ffn$!++++SEFbw7$FiqF[_m7$Fiq$!++++gXFbw7
+$FfnF__mFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v5~:|+Image~=~32Ffv73F'FEFizF]oFe
+_lFgpF_hlF_rFhrFj\\mF_tFft-F(6%7&7$Ffn$!++++SCFbw7$FiqFj_m7$Fiq$!++++g
+VFbw7$FfnF^`mFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v5~:|+Image~=~33Ffv73F'FEFiz
+F]oFe_lFgpF_hlF_rFhrFj\\mF_tFft-F(6%7&7$Ffn$!++++SAFbw7$FiqFi`m7$Fiq$!
+++++gTFbw7$FfnF]amFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v5~:|+Image~=~34Ffv73F'
+FEFizF]oFe_lFgpF_hlF_rFhrFj\\mF_tFft-F(6%7&7$FfnF/7$FiqF/7$FiqFdp7$Ffn
+FdpFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v5~:|+Image~=~35Ffv73F'FEFizF]oFe_lFgp
+F_hlF_rFhrFj\\mFdamFftF_tF_uFjuF^v-Fcv6#Q6Move~n|[v6~:|+Image~=~36Ffv7
+3F'FEFizF]oFe_lFgpF_hlF_rFhrFj\\mFdamFft-F(6%7&7$FaoF\\^m7$FinF\\^m7$F
+inF`^m7$FaoF`^mFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v6~:|+Image~=~37Ffv73F'FEF
+izF]oFe_lFgpF_hlF_rFhrFj\\mFdamFft-F(6%7&7$FaoF[_m7$FinF[_m7$FinF__m7$
+FaoF__mFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v6~:|+Image~=~38Ffv73F'FEFizF]oFe_
+lFgpF_hlF_rFhrFj\\mFdamFft-F(6%7&7$FaoFj_m7$FinFj_m7$FinF^`m7$FaoF^`mF
+TFAF_uFjuF^v-Fcv6#Q6Move~n|[v6~:|+Image~=~39Ffv73F'FEFizF]oFe_lFgpF_hl
+F_rFhrFj\\mFdamFft-F(6%7&7$FaoFi`m7$FinFi`m7$FinF]am7$FaoF]amFTFAF_uFj
+uF^v-Fcv6#Q6Move~n|[v6~:|+Image~=~40Ffv73F'FEFizF]oFe_lFgpF_hlF_rFhrFj
+\\mFdamFft-F(6%7&7$FaoF/7$FinF/7$FinFdp7$FaoFdpFTFAF_uFjuF^v-Fcv6#Q6Mo
+ve~n|[v6~:|+Image~=~41Ffv73F'FEFizF]oFe_lF_hlF_rFhrFj\\mFdamF_emFftFgp
+F_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~42Ffv73F'FEFizF]oFe_lF_hlF_rFhr
+Fj\\mFdamF_emFft-F(6%7&7$Fj^lF[q7$$\"++++gJFbwF[q7$FcfmF_q7$Fj^lF_qFTF
+AF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~43Ffv73F'FEFizF]oFe_lF_hlF_rFh
+rFj\\mFdamF_emFft-F(6%7&7$F[^lF[q7$$\"++++gLFbwF[q7$F`gmF_q7$F[^lF_qFT
+FAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~44Ffv73F'FEFizF]oFe_lF_hlF_rF
+hrFj\\mFdamF_emFft-F(6%7&7$F\\]lF[q7$$\"++++gNFbwF[q7$F]hmF_q7$F\\]lF_
+qFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~45Ffv73F'FEFizF]oFe_lF_hlF
+_rFhrFj\\mFdamF_emFft-F(6%7&7$F\\\\lF[q7$$\"++++gPFbwF[q7$FjhmF_q7$F\\
+\\lF_qFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~46Ffv73F'FEFizF]oFe_l
+F_hlF_rFhrFj\\mFdamF_emFft-F(6%7&7$FIF[q7$FiqF[qF]t7$FIF_qFTFAF_uFjuF^
+v-Fcv6#Q6Move~n|[v7~:|+Image~=~47Ffv73F'FEFizF]oFe_lF_hlF_rFhrFj\\mFda
+mF_emFft-F(6%7&7$Fh`lF[q7$F[alF[q7$F[alF_q7$Fh`lF_qFTFAF_uFjuF^v-Fcv6#
+Q6Move~n|[v7~:|+Image~=~48Ffv73F'FEFizF]oFe_lF_hlF_rFhrFj\\mFdamF_emFf
+t-F(6%7&7$FgalF[q7$FjalF[q7$FjalF_q7$FgalF_qFTFAF_uFjuF^v-Fcv6#Q6Move~
+n|[v7~:|+Image~=~49Ffv73F'FEFizF]oFe_lF_hlF_rFhrFj\\mFdamF_emFft-F(6%7
+&7$FfblF[q7$FiblF[q7$FiblF_q7$FfblF_qFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:
+|+Image~=~50Ffv73F'FEFizF]oFe_lF_hlF_rFhrFj\\mFdamF_emFft-F(6%7&7$Fecl
+F[q7$FhclF[q7$FhclF_q7$FeclF_qFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image
+~=~51Ffv73F'FEFizF]oFe_lF_hlF_rFhrFj\\mFdamF_emFft-F(6%7&7$F\\sF[q7$Fi
+nF[qFdt7$F\\sF_qFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~52Ffv73F'FE
+FizF]oFe_lF_hlF_rFhrFj\\mFdamF_emFft-F(6%7&7$F_elF[q7$FdwF[q7$FdwF_q7$
+F_elF_qFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~53Ffv73F'FEFizF]oFe_
+lF_hlF_rFhrFj\\mFdamF_emFft-F(6%7&7$F\\flF[q7$FcxF[q7$FcxF_q7$F\\flF_q
+FTFAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~54Ffv73F'FEFizF]oFe_lF_hlF_
+rFhrFj\\mFdamF_emFft-F(6%7&7$FiflF[q7$FbyF[q7$FbyF_q7$FiflF_qFTFAF_uFj
+uF^v-Fcv6#Q6Move~n|[v7~:|+Image~=~55Ffv73F'FEFizF]oFe_lF_hlF_rFhrFj\\m
+FdamF_emFft-F(6%7&7$FfglF[q7$FazF[q7$FazF_q7$FfglF_qFTFAF_uFjuF^v-Fcv6
+#Q6Move~n|[v7~:|+Image~=~56Ffv73F'FEFizF]oFe_lF_hlF_rFhrFj\\mFdamF_emF
+ft-F(6%7&7$FfnF[q7$FfoF[q7$FfoF_qF^tFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v7~:|
++Image~=~57Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\mFdamF_emFftFhrF_uFjuF^v-
+Fcv6#Q6Move~n|[v8~:|+Image~=~58Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\mFdam
+F_emFft-F(6%7&7$F\\s$!++++S7Fbw7$FNF`an7$FN$!++++gJFbw7$F\\sFdanFTFAF_
+uFjuF^v-Fcv6#Q6Move~n|[v8~:|+Image~=~59Ffv73F'FEFizF]oFe_lF^`nF_hlF_rF
+j\\mFdamF_emFft-F(6%7&7$F\\s$!++++S9Fbw7$FNF_bn7$FN$!++++gLFbw7$F\\sFc
+bnFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v8~:|+Image~=~60Ffv73F'FEFizF]oFe_lF^`n
+F_hlF_rFj\\mFdamF_emFft-F(6%7&7$F\\s$!++++S;Fbw7$FNF^cn7$FN$!++++gNFbw
+7$F\\sFbcnFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v8~:|+Image~=~61Ffv73F'FEFizF]o
+Fe_lF^`nF_hlF_rFj\\mFdamF_emFft-F(6%7&7$F\\s$!++++S=Fbw7$FNF]dn7$FN$!+
++++gPFbw7$F\\sFadnFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v8~:|+Image~=~62Ffv73F'
+FEFizF]oFe_lF^`nF_hlF_rFj\\mFdamF_emFft-F(6%7&7$F\\sF/7$FNF/Fcp7$F\\sF
+dpFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v8~:|+Image~=~63Ffv73F'FEFizF]oFe_lF^`n
+F_hlF_rFj\\mFdamF_emFft-F(6%7&7$F\\sFi`m7$FNFi`m7$FNF]am7$F\\sF]amFTFA
+F_uFjuF^v-Fcv6#Q6Move~n|[v8~:|+Image~=~64Ffv73F'FEFizF]oFe_lF^`nF_hlF_
+rFj\\mFdamF_emFft-F(6%7&7$F\\sFj_m7$FNFj_m7$FNF^`m7$F\\sF^`mFTFAF_uFju
+F^v-Fcv6#Q6Move~n|[v8~:|+Image~=~65Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\m
+FdamF_emFft-F(6%7&7$F\\sF[_m7$FNF[_m7$FNF__m7$F\\sF__mFTFAF_uFjuF^v-Fc
+v6#Q6Move~n|[v8~:|+Image~=~66Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\mFdamF_
+emFft-F(6%7&7$F\\sF\\^m7$FNF\\^m7$FNF`^m7$F\\sF`^mFTFAF_uFjuF^v-Fcv6#Q
+6Move~n|[v8~:|+Image~=~67Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\mFdamF_emFf
+t-F(6%7&7$F\\sF`pFbpF^qF]]nFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v8~:|+Image~=~
+68Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\mFdamF_emFft-F(6%7&7$F\\s$!++++SKF
+bw7$FNFjhn7$FN$!++++g^Fbw7$F\\sF^inFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v8~:|+
+Image~=~69Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\mFdamF_emFft-F(6%7&7$F\\s$
+!++++SMFbw7$FNFiin7$FN$!++++g`Fbw7$F\\sF]jnFTFAF_uFjuF^v-Fcv6#Q6Move~n
+|[v8~:|+Image~=~70Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\mFdamF_emFft-F(6%7
+&7$F\\s$!++++SOFbw7$FNFhjn7$FN$!++++gbFbw7$F\\sF\\[oFTFAF_uFjuF^v-Fcv6
+#Q6Move~n|[v8~:|+Image~=~71Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\mFdamF_em
+Fft-F(6%7&7$F\\s$!++++SQFbw7$FNFg[o7$FN$!++++gdFbw7$F\\sF[\\oFTFAF_uFj
+uF^v-Fcv6#Q6Move~n|[v8~:|+Image~=~72Ffv73F'FEFizF]oFe_lF^`nF_hlF_rFj\\
+mFdamF_emFft-F(6%7&F[]nF]q7$FNF\\rFfdlFTFAF_uFjuF^v-Fcv6#Q6Move~n|[v8~
+:|+Image~=~73Ffv73FEFizF]oFe_lF^`nF_hlF_rFb\\oFj\\mFdamF_emFftF'F_uFju
+F^v-Fcv6#Q6Move~n|[v9~:|+Image~=~74Ffv73FEFizF]oFe_lF^`nF_hlF_rFb\\oFj
+\\mFdamF_emFft-F(6%7&7$Fj^lF/7$F]_lF/7$F]_lF57$Fj^lF5F8FAF_uFjuF^v-Fcv
+6#Q6Move~n|[v9~:|+Image~=~75Ffv73FEFizF]oFe_lF^`nF_hlF_rFb\\oFj\\mFdam
+F_emFft-F(6%7&7$F[^lF/7$F^^lF/7$F^^lF57$F[^lF5F8FAF_uFjuF^v-Fcv6#Q6Mov
+e~n|[v9~:|+Image~=~76Ffv73FEFizF]oFe_lF^`nF_hlF_rFb\\oFj\\mFdamF_emFft
+-F(6%7&7$F\\]lF/7$F_]lF/7$F_]lF57$F\\]lF5F8FAF_uFjuF^v-Fcv6#Q6Move~n|[
+v9~:|+Image~=~77Ffv73FEFizF]oFe_lF^`nF_hlF_rFb\\oFj\\mFdamF_emFft-F(6%
+7&7$F\\\\lF/7$F`\\lF/7$F`\\lF57$F\\\\lF5F8FAF_uFjuF^v-Fcv6#Q6Move~n|[v
+9~:|+Image~=~78Ffv73FEFizF]oFe_lF^`nF_hlF_rFb\\oFj\\mFdamF_emFft-F(6%7
+&7$FIF/F\\enF_s7$FIF5F8FAF_uFjuF^v-Fcv6#Q6Move~n|[v9~:|+Image~=~79Ffv7
+3Fj_oFEFizF]oF^`nF_hlF_rFb\\oFj\\mFdamF_emFftFe_lF_uFjuF^v-Fcv6#Q7Move
+~n|[v10~:|+Image~=~80Ffv73Fj_oFEFizF]oF^`nF_hlF_rFb\\oFj\\mFdamF_emFft
+Ff^lF_uFjuF^v-Fcv6#Q7Move~n|[v10~:|+Image~=~81Ffv73Fj_oFEFizF]oF^`nF_h
+lF_rFb\\oFj\\mFdamF_emFftFg]lF_uFjuF^v-Fcv6#Q7Move~n|[v10~:|+Image~=~8
+2Ffv73Fj_oFEFizF]oF^`nF_hlF_rFb\\oFj\\mFdamF_emFftFh\\lF_uFjuF^v-Fcv6#
+Q7Move~n|[v10~:|+Image~=~83Ffv73Fj_oFEFizF]oF^`nF_hlF_rFb\\oFj\\mFdamF
+_emFftFh[lF_uFjuF^v-Fcv6#Q7Move~n|[v10~:|+Image~=~84Ffv73Fj_oFEFizF]oF
+^`nF_hlF_rFb\\oFj\\mFdamF_emFftF\\pF_uFjuF^v-Fcv6#Q7Move~n|[v10~:|+Ima
+ge~=~85Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mFdamF_emFftF_rF_uFjuF^v-
+Fcv6#Q7Move~n|[v11~:|+Image~=~86Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\
+mFdamF_emFft-F(6%7&7$F,F_\\m7$FdrF_\\m7$FdrFc\\m7$F,Fc\\mFTFAF_uFjuF^v
+-Fcv6#Q7Move~n|[v11~:|+Image~=~87Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj
+\\mFdamF_emFft-F(6%7&7$F,F`[m7$FdrF`[m7$FdrFd[m7$F,Fd[mFTFAF_uFjuF^v-F
+cv6#Q7Move~n|[v11~:|+Image~=~88Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\m
+FdamF_emFft-F(6%7&7$F,Fajl7$FdrFajl7$FdrFejl7$F,FejlFTFAF_uFjuF^v-Fcv6
+#Q7Move~n|[v11~:|+Image~=~89Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mFda
+mF_emFft-F(6%7&7$F,Fbil7$FdrFbil7$FdrFfil7$F,FfilFTFAF_uFjuF^v-Fcv6#Q7
+Move~n|[v11~:|+Image~=~90Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mFdamF_
+emFft-F(6%7&7$F,Fco7$FdrFco7$FdrF5F7FTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:
+|+Image~=~91Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&7
+$F,F`an7$FdrF`an7$FdrFdan7$F,FdanFTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:|+I
+mage~=~92Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&7$F,
+F_bn7$FdrF_bn7$FdrFcbn7$F,FcbnFTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:|+Imag
+e~=~93Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&7$F,F^c
+n7$FdrF^cn7$FdrFbcn7$F,FbcnFTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:|+Image~=
+~94Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&7$F,F]dn7$
+FdrF]dn7$FdrFadn7$F,FadnFTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:|+Image~=~95
+Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&F+7$FdrF/7$Fd
+rFdpF[`lFTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:|+Image~=~96Ffv73Fj_oFEFizF]
+oF\\pF^`nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&7$F,Fi`m7$FdrFi`m7$FdrF]am7$F
+,F]amFTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:|+Image~=~97Ffv73Fj_oFEFizF]oF
+\\pF^`nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&7$F,Fj_m7$FdrFj_m7$FdrF^`m7$F,F
+^`mFTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:|+Image~=~98Ffv73Fj_oFEFizF]oF\\p
+F^`nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&7$F,F[_m7$FdrF[_m7$FdrF__m7$F,F__m
+FTFAF_uFjuF^v-Fcv6#Q7Move~n|[v11~:|+Image~=~99Ffv73Fj_oFEFizF]oF\\pF^`
+nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&7$F,F\\^m7$FdrF\\^m7$FdrF`^m7$F,F`^mF
+TFAF_uFjuF^v-Fcv6#Q8Move~n|[v11~:|+Image~=~100Ffv73Fj_oFEFizF]oF\\pF^`
+nF_hlFb\\oFj\\mFdamF_emFft-F(6%7&Fh_l7$FdrF`p7$FdrF_qFaqFTFAF_uFjuF^v-
+Fcv6#Q8Move~n|[v11~:|+Image~=~101Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj
+\\mFdamF_emFft-F(6%7&7$F,Fjhn7$FdrFjhn7$FdrF^in7$F,F^inFTFAF_uFjuF^v-F
+cv6#Q8Move~n|[v11~:|+Image~=~102Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\
+mFdamF_emFft-F(6%7&7$F,Fiin7$FdrFiin7$FdrF]jn7$F,F]jnFTFAF_uFjuF^v-Fcv
+6#Q8Move~n|[v11~:|+Image~=~103Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mF
+damF_emFft-F(6%7&7$F,Fhjn7$FdrFhjn7$FdrF\\[o7$F,F\\[oFTFAF_uFjuF^v-Fcv
+6#Q8Move~n|[v11~:|+Image~=~104Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mF
+damF_emFft-F(6%7&7$F,Fg[o7$FdrFg[o7$FdrF[\\o7$F,F[\\oFTFAF_uFjuF^v-Fcv
+6#Q8Move~n|[v11~:|+Image~=~105Ffv73Fj_oFEFizF]oF\\pF^`nF_hlFb\\oFj\\mF
+damF_emFft-F(6%7&Fjp7$FdrF[q7$FdrF\\r7$F,F\\rFTFAF_uFjuF^v-Fcv6#Q8Move
+~n|[v11~:|+Image~=~106Ffv73FEFizF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emF
+ftFj_oF_uFjuF^v-Fcv6#Q8Move~n|[v12~:|+Image~=~107Ffv73FEFizF]oF\\pF^`n
+F_hlF[_pFb\\oFj\\mFdamF_emFftF__oF_uFjuF^v-Fcv6#Q8Move~n|[v12~:|+Image
+~=~108Ffv73FEFizF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emFftFd^oF_uFjuF^v-
+Fcv6#Q8Move~n|[v12~:|+Image~=~109Ffv73FEFizF]oF\\pF^`nF_hlF[_pFb\\oFj
+\\mFdamF_emFftFi]oF_uFjuF^v-Fcv6#Q8Move~n|[v12~:|+Image~=~110Ffv73FEFi
+zF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emFftF^]oF_uFjuF^v-Fcv6#Q8Move~n|[
+v12~:|+Image~=~111Ffv73FEFizF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emFftF'
+F_uFjuF^v-Fcv6#Q8Move~n|[v12~:|+Image~=~112Ffv73F'FizF]oF\\pF^`nF_hlF[
+_pFb\\oFj\\mFdamF_emFftFEF_uFjuF^v-Fcv6#Q8Move~n|[v13~:|+Image~=~113Ff
+v73F'FizF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emFft-F(6%7&7$F\\\\lFK7$F`
+\\lFK7$F`\\lFQ7$F\\\\lFQFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v13~:|+Image~=~11
+4Ffv73F'FizF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emFft-F(6%7&7$F\\]lFK7$F
+_]lFK7$F_]lFQ7$F\\]lFQFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v13~:|+Image~=~115F
+fv73F'FizF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emFft-F(6%7&7$F[^lFK7$F^^l
+FK7$F^^lFQ7$F[^lFQFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v13~:|+Image~=~116Ffv73
+F'FizF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emFft-F(6%7&7$Fj^lFK7$F]_lFK7$
+F]_lFQ7$Fj^lFQFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v13~:|+Image~=~117Ffv73F'Fi
+zF]oF\\pF^`nF_hlF[_pFb\\oFj\\mFdamF_emFft-F(6%7&Fbr7$F2FK7$F2FQ7$F,FQF
+TFAF_uFjuF^v-Fcv6#Q8Move~n|[v13~:|+Image~=~118Ffv73F'F]dpFizF]oF^`nF_h
+lF[_pFb\\oFj\\mFdamF_emFftF\\pF_uFjuF^v-Fcv6#Q8Move~n|[v14~:|+Image~=~
+119Ffv73F'F]dpFizF]oF^`nF_hlF[_pFb\\oFj\\mFdamF_emFftFh[lF_uFjuF^v-Fcv
+6#Q8Move~n|[v14~:|+Image~=~120Ffv73F'F]dpFizF]oF^`nF_hlF[_pFb\\oFj\\mF
+damF_emFftFh\\lF_uFjuF^v-Fcv6#Q8Move~n|[v14~:|+Image~=~121Ffv73F'F]dpF
+izF]oF^`nF_hlF[_pFb\\oFj\\mFdamF_emFftFg]lF_uFjuF^v-Fcv6#Q8Move~n|[v14
+~:|+Image~=~122Ffv73F'F]dpFizF]oF^`nF_hlF[_pFb\\oFj\\mFdamF_emFftFf^lF
+_uFjuF^v-Fcv6#Q8Move~n|[v14~:|+Image~=~123Ffv73F'F]dpFizF]oF^`nF_hlF[_
+pFb\\oFj\\mFdamF_emFftFe_lF_uFjuF^v-Fcv6#Q8Move~n|[v14~:|+Image~=~124F
+fv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFftFb\\oF_uFjuF^v-Fcv6#Q8
+Move~n|[v15~:|+Image~=~125Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_
+emFftFc[oF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~126Ffv73F'F]dpFizF]oF
+e_lF^`nF_hlF[_pFj\\mFdamF_emFftFdjnF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Ima
+ge~=~127Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFftFeinF_uFjuF^v
+-Fcv6#Q8Move~n|[v15~:|+Image~=~128Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj
+\\mFdamF_emFftFfhnF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~129Ffv73F'F]
+dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFftF^hnF_uFjuF^v-Fcv6#Q8Move~n|[v
+15~:|+Image~=~130Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFftFcgn
+F_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~131Ffv73F'F]dpFizF]oFe_lF^`nF_
+hlF[_pFj\\mFdamF_emFftFhfnF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~132F
+fv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFftF]fnF_uFjuF^v-Fcv6#Q8M
+ove~n|[v15~:|+Image~=~133Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_e
+mFftFbenF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~134Ffv73F'F]dpFizF]oFe
+_lF^`nF_hlF[_pFj\\mFdamF_emFftFhdnF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Imag
+e~=~135Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFftFicnF_uFjuF^v-
+Fcv6#Q8Move~n|[v15~:|+Image~=~136Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\
+mFdamF_emFftFjbnF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~137Ffv73F'F]dp
+FizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFftF[bnF_uFjuF^v-Fcv6#Q8Move~n|[v15
+~:|+Image~=~138Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFftF\\anF
+_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~139Ffv73F'F]dpFizF]oFe_lF^`nF_h
+lF[_pFj\\mFdamF_emFftFhrF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~140Ffv
+73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFft-F(6%7&7$F\\s$!*+++S)Fbw
+7$FNFcjp7$FNFfil7$F\\sFfilFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Image~=~
+141Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFft-F(6%7&7$F\\s$!*++
++S'Fbw7$FNF`[q7$FNFejl7$F\\sFejlFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v15~:|+Im
+age~=~142Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFft-F(6%7&7$F\\
+s$!*+++S%Fbw7$FNF]\\q7$FNFd[m7$F\\sFd[mFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v1
+5~:|+Image~=~143Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_emFft-F(6%
+7&7$F\\s$!*+++S#Fbw7$FNFj\\q7$FNFc\\m7$F\\sFc\\mFTFAF_uFjuF^v-Fcv6#Q8M
+ove~n|[v15~:|+Image~=~144Ffv73F'F]dpFizF]oFe_lF^`nF_hlF[_pFj\\mFdamF_e
+mFft-F(6%7&7$F\\sFKFM7$FNFio7$F\\sFioFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v15~
+:|+Image~=~145Ffv73F]dpFizF]oFe_lF^`nF_hlF[_pFc]qFj\\mFdamF_emFftF'F_u
+FjuF^v-Fcv6#Q8Move~n|[v16~:|+Image~=~146Ffv73F]dpFizF]oFe_lF^`nF_hlF[_
+pFc]qFj\\mFdamF_emFftF^]oF_uFjuF^v-Fcv6#Q8Move~n|[v16~:|+Image~=~147Ff
+v73F]dpFizF]oFe_lF^`nF_hlF[_pFc]qFj\\mFdamF_emFftFi]oF_uFjuF^v-Fcv6#Q8
+Move~n|[v16~:|+Image~=~148Ffv73F]dpFizF]oFe_lF^`nF_hlF[_pFc]qFj\\mFdam
+F_emFftFd^oF_uFjuF^v-Fcv6#Q8Move~n|[v16~:|+Image~=~149Ffv73F]dpFizF]oF
+e_lF^`nF_hlF[_pFc]qFj\\mFdamF_emFftF__oF_uFjuF^v-Fcv6#Q8Move~n|[v16~:|
++Image~=~150Ffv73F]dpFizF]oFe_lF^`nF_hlF[_pFc]qFj\\mFdamF_emFftFj_oF_u
+FjuF^v-Fcv6#Q8Move~n|[v16~:|+Image~=~151Ffv73Fj_oF]dpFizF]oF^`nF_hlF[_
+pFc]qFj\\mFdamF_emFftFe_lF_uFjuF^v-Fcv6#Q8Move~n|[v17~:|+Image~=~152Ff
+v73Fj_oF]dpFizF]oF^`nF_hlF[_pFc]qFj\\mFdamF_emFftFf^lF_uFjuF^v-Fcv6#Q8
+Move~n|[v17~:|+Image~=~153Ffv73Fj_oF]dpFizF]oF^`nF_hlF[_pFc]qFj\\mFdam
+F_emFftFg]lF_uFjuF^v-Fcv6#Q8Move~n|[v17~:|+Image~=~154Ffv73Fj_oF]dpFiz
+F]oF^`nF_hlF[_pFc]qFj\\mFdamF_emFftFh\\lF_uFjuF^v-Fcv6#Q8Move~n|[v17~:
+|+Image~=~155Ffv73Fj_oF]dpFizF]oF^`nF_hlF[_pFc]qFj\\mFdamF_emFftFh[lF_
+uFjuF^v-Fcv6#Q8Move~n|[v17~:|+Image~=~156Ffv73Fj_oF]dpFizF]oF^`nF_hlF[
+_pFc]qFj\\mFdamF_emFftF\\pF_uFjuF^v-Fcv6#Q8Move~n|[v17~:|+Image~=~157F
+fv73Fj_oF]dpFizF]oF\\pF^`nF_hlFc]qFj\\mFdamF_emFftF[_pF_uFjuF^v-Fcv6#Q
+8Move~n|[v18~:|+Image~=~158Ffv73Fj_oF]dpFizF]oF\\pF^`nF_hlFc]qFj\\mFda
+mF_emFftF`^pF_uFjuF^v-Fcv6#Q8Move~n|[v18~:|+Image~=~159Ffv73Fj_oF]dpFi
+zF]oF\\pF^`nF_hlFc]qFj\\mFdamF_emFftFe]pF_uFjuF^v-Fcv6#Q8Move~n|[v18~:
+|+Image~=~160Ffv73Fj_oF]dpFizF]oF\\pF^`nF_hlFc]qFj\\mFdamF_emFftFj\\pF
+_uFjuF^v-Fcv6#Q8Move~n|[v18~:|+Image~=~161Ffv73Fj_oF]dpFizF]oF\\pF^`nF
+_hlFc]qFj\\mFdamF_emFftF_\\pF_uFjuF^v-Fcv6#Q8Move~n|[v18~:|+Image~=~16
+2Ffv73Fj_oF]dpFizF]oF\\pF^`nF_hlFc]qFj\\mFdamF_emFftFf[pF_uFjuF^v-Fcv6
+#Q8Move~n|[v18~:|+Image~=~163Ffv73Fj_oF]dpFizF]oF\\pF^`nF_hlFc]qFj\\mF
+damF_emFftF[[pF_uFjuF^v-Fcv6#Q8Move~n|[v18~:|+Image~=~164Ffv73Fj_oF]dp
+FizF]oF\\pF^`nF_hlFc]qFj\\mFdamF_emFftF`joF_uFjuF^v-Fcv6#Q8Move~n|[v18
+~:|+Image~=~165Ffv73Fj_oF]dpFizF]oF\\pF^`nF_hlFc]qFj\\mFdamF_emFftFeio
+F_uFjuF^v-Fcv6#Q8Move~n|[v18~:|+Image~=~166Ffv73Fj_oF]dpFizF]oF\\pF^`n
+F_hlFc]qFj\\mFdamF_emFftFjhoF_uFjuF^v-Fcv6#Q8Move~n|[v18~:|+Image~=~16
+7Ffv73Fj_oF]dpFizF]oF\\pF^`nF_hlFc]qFj\\mFdamF_emFftFahoF_uFjuF^v-Fcv6
+#Q8Move~n|[v18~:|+Image~=~168Ffv73Fj_oF]dpFizF]oF\\pF_hlFahoFc]qFj\\mF
+damF_emFftF^`nF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~169Ffv73Fj_oF]dp
+FizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFftFc_nF_uFjuF^v-Fcv6#Q8Move~n|[v19
+~:|+Image~=~170Ffv73Fj_oF]dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFftFh^n
+F_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~171Ffv73Fj_oF]dpFizF]oF\\pF_hl
+FahoFc]qFj\\mFdamF_emFftF]^nF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~17
+2Ffv73Fj_oF]dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFftFb]nF_uFjuF^v-Fcv6
+#Q8Move~n|[v19~:|+Image~=~173Ffv73Fj_oF]dpFizF]oF\\pF_hlFahoFc]qFj\\mF
+damF_emFftFh\\nF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~174Ffv73Fj_oF]d
+pFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFftF]\\nF_uFjuF^v-Fcv6#Q8Move~n|[v
+19~:|+Image~=~175Ffv73Fj_oF]dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFftFb
+[nF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~176Ffv73Fj_oF]dpFizF]oF\\pF_
+hlFahoFc]qFj\\mFdamF_emFftFgjmF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~
+177Ffv73Fj_oF]dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFftF\\jmF_uFjuF^v-F
+cv6#Q8Move~n|[v19~:|+Image~=~178Ffv73Fj_oF]dpFizF]oF\\pF_hlFahoFc]qFj
+\\mFdamF_emFftFbimF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~179Ffv73Fj_o
+F]dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFft-F(6%7&7$$\"*+++S)FbwF[qFihm
+F\\im7$FifqF_qFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~180Ffv73Fj_o
+F]dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFft-F(6%7&7$$\"*+++S'FbwF[qF\\h
+mF_hm7$FdgqF_qFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~181Ffv73Fj_o
+F]dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFft-F(6%7&7$$\"*+++S%FbwF[qF_gm
+Fbgm7$F_hqF_qFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~182Ffv73Fj_oF
+]dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFft-F(6%7&7$$\"*+++S#FbwF[qFbfmF
+efm7$FjhqF_qFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v19~:|+Image~=~183Ffv73Fj_oF]
+dpFizF]oF\\pF_hlFahoFc]qFj\\mFdamF_emFftFgpF_uFjuF^v-Fcv6#Q8Move~n|[v1
+9~:|+Image~=~184Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mF_emFftFdam
+F_uFjuF^v-Fcv6#Q8Move~n|[v20~:|+Image~=~185Ffv73Fj_oF]dpFizF]oF\\pFgpF
+_hlFahoFc]qFj\\mF_emFftFe`mF_uFjuF^v-Fcv6#Q8Move~n|[v20~:|+Image~=~186
+Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mF_emFftFf_mF_uFjuF^v-Fcv6#Q
+8Move~n|[v20~:|+Image~=~187Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\m
+F_emFftFg^mF_uFjuF^v-Fcv6#Q8Move~n|[v20~:|+Image~=~188Ffv73Fj_oF]dpFiz
+F]oF\\pFgpF_hlFahoFc]qFj\\mF_emFftFh]mF_uFjuF^v-Fcv6#Q8Move~n|[v20~:|+
+Image~=~189Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mF_emFftFhsF_uFju
+F^v-Fcv6#Q8Move~n|[v20~:|+Image~=~190Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFah
+oFc]qFj\\mFhsFftF_emF_uFjuF^v-Fcv6#Q8Move~n|[v21~:|+Image~=~191Ffv73Fj
+_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsFftFddmF_uFjuF^v-Fcv6#Q8Move~n|
+[v21~:|+Image~=~192Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsFftFi
+cmF_uFjuF^v-Fcv6#Q8Move~n|[v21~:|+Image~=~193Ffv73Fj_oF]dpFizF]oF\\pFg
+pF_hlFahoFc]qFj\\mFhsFftF^cmF_uFjuF^v-Fcv6#Q8Move~n|[v21~:|+Image~=~19
+4Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsFftFcbmF_uFjuF^v-Fcv6#Q
+8Move~n|[v21~:|+Image~=~195Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\m
+FhsFftF_tF_uFjuF^v-Fcv6#Q8Move~n|[v21~:|+Image~=~196Ffv73Fj_oF]dpFizF]
+oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFftF_uFjuF^v-Fcv6#Q8Move~n|[v22~:|+Imag
+e~=~197Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_t-F(6%7&7$FjtFi
+`m7$FfoFi`m7$FfoF]am7$FjtF]amFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v22~:|+Image
+~=~198Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_t-F(6%7&7$FjtFj_
+m7$FfoFj_m7$FfoF^`m7$FjtF^`mFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v22~:|+Image~
+=~199Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_t-F(6%7&7$FjtF[_m
+7$FfoF[_m7$FfoF__m7$FjtF__mFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v22~:|+Image~=
+~200Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_t-F(6%7&7$FjtF\\^m
+7$FfoF\\^m7$FfoF`^m7$FjtF`^mFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v22~:|+Image~
+=~201Ffv73Fj_oF]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_t-F(6%7&7$FjtF`p7
+$FfoF`pFc`n7$FjtF_qFTFAF_uFjuF^v-Fcv6#Q8Move~n|[v22~:|+Image~=~202Ffv7
+3F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_rFj_oF_uFjuF^v-Fcv6#Q8Move
+~n|[v23~:|+Image~=~203Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_
+r-F(6%7&7$Fh`lF/7$FcfmF/7$FcfmF57$Fh`lF5F8FAF_uFjuF^v-Fcv6#Q8Move~n|[v
+23~:|+Image~=~204Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6
+%7&7$FgalF/7$F`gmF/7$F`gmF57$FgalF5F8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|
++Image~=~205Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&7$
+FfblF/7$F]hmF/7$F]hmF57$FfblF5F8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Imag
+e~=~206Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&7$FeclF
+/7$FjhmF/7$FjhmF57$FeclF5F8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Image~=~2
+07Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&F[enFhamFfsF
+`sF8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Image~=~208Ffv73F]dpFizF]oF\\pFg
+pF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&7$F_elF/7$F[alF/7$F[alF57$F_elF5F8F
+AF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Image~=~209Ffv73F]dpFizF]oF\\pFgpF_hl
+FahoFc]qFj\\mFhsF_tFe_r-F(6%7&7$F\\flF/7$FjalF/7$FjalF57$F\\flF5F8FAF_
+uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Image~=~210Ffv73F]dpFizF]oF\\pFgpF_hlFah
+oFc]qFj\\mFhsF_tFe_r-F(6%7&7$FiflF/7$FiblF/7$FiblF57$FiflF5F8FAF_uFjuF
+^v-Fcv6#Q8Move~n|[v23~:|+Image~=~211Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]q
+Fj\\mFhsF_tFe_r-F(6%7&7$FfglF/7$FhclF/7$FhclF57$FfglF5F8FAF_uFjuF^v-Fc
+v6#Q8Move~n|[v23~:|+Image~=~212Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\m
+FhsF_tFe_r-F(6%7&FgamFcem7$FinF5FgsF8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|
++Image~=~213Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&7$
+F`wF/7$FdwF/7$FdwF57$F`wF5F8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Image~=~
+214Ffv73F]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&7$F`xF/7$Fc
+xF/7$FcxF57$F`xF5F8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Image~=~215Ffv73F
+]dpFizF]oF\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&7$F_yF/7$FbyF/7$FbyF
+57$F_yF5F8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Image~=~216Ffv73F]dpFizF]o
+F\\pFgpF_hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&7$F^zF/7$FazF/7$FazF57$F^zF5F
+8FAF_uFjuF^v-Fcv6#Q8Move~n|[v23~:|+Image~=~217Ffv73F]dpFizF]oF\\pFgpF_
+hlFahoFc]qFj\\mFhsF_tFe_r-F(6%7&FbemF\\u7$FfoF57$FaoF5F8FAF_uFjuF^v-Fc
+v6#Q8Move~n|[v23~:|+Image~=~218FfvFju" 1 2 0 1 10 0 2 9 1 4 1 
+1.000000 45.000000 -187.000000 0 0 "Curve 1" "Curve 2" "Curve 3" "Curv
+e 4" "Curve 5" "Curve 6" "Curve 7" "Curve 8" "Curve 9" "Curve 10" "Cur
+ve 11" "Curve 12" "Curve 13" "Curve 14" }}{MPLTEXT 1 0 45 "\n\n#######
+#### End of explanation ###########\n" }{TEXT -1 0 "" }}}{EXCHG {PARA 
+0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}{EXCHG }{EXCHG }{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{MARK "33 0 0" 0 }
+{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }
